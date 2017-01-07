@@ -1,0 +1,11 @@
+---
+
+upgradepkgspip_exclude_hosts:
+  host1: true
+  host2: true
+upgradepkgspip_pip_log: /var/log/pip-upgrade.log
+upgradepkgspip_pip3_log: /var/log/pip3-upgrade.log
+## awk regex
+upgradepkgspip_pip_exclude: '(supervisor|Pillow|twist)'
+upgradepkgspip_pip3_exclude: '(supervisor|Pillow|twist)'
+
