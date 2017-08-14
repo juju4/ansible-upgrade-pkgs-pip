@@ -1,19 +1,5 @@
 ---
 
-## Note: python pip doesn't address missing devel packages required for building like libssl-dev, libffi-dev, ...
-- name: check python pip installed
-  command: which pip
-  changed_when: false
-  ignore_errors: true
-  register: pip1
-  tags: pip
-- name: get outdated python packages
-  shell: "pip list --outdated 2>/dev/null | awk '!/{{ upgradepkgspip_pip_exclude }}/ { print $1 }'"
-  register: piplist
-  changed_when: false
-  ignore_errors: true
-  tags: pip
-
 - name: Trusty | python SNI dependencies
   apt: name={{item}} state=present
   with_items:
@@ -27,6 +13,20 @@
   with_items:
     - ndg-httpsclient
   when: ansible_distribution_release == 'trusty'
+
+## Note: python pip doesn't address missing devel packages required for building like libssl-dev, libffi-dev, ...
+- name: check python pip installed
+  command: which pip
+  changed_when: false
+  ignore_errors: true
+  register: pip1
+  tags: pip
+- name: get outdated python packages
+  shell: "pip list --outdated 2>/dev/null | awk '!/{{ upgradepkgspip_pip_exclude }}/ { print $1 }'"
+  register: piplist
+  changed_when: false
+  ignore_errors: true
+  tags: pip
 
 #- debug: var=piplist
 - block:
