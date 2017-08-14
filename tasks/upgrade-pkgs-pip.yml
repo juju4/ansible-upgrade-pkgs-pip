@@ -14,6 +14,20 @@
   ignore_errors: true
   tags: pip
 
+- name: Trusty | python SNI dependencies
+  apt: name={{item}} state=present
+  with_items:
+    - python-urllib3
+    - python-openssl
+    - python-pyasn1
+  when: ansible_distribution_release == 'trusty'
+
+- name: Trusty | python pip SNI dependencies
+  pip: name={{item}} state=present
+  with_items:
+    - ndg-httpsclient
+  when: ansible_distribution_release == 'trusty'
+
 #- debug: var=piplist
 - block:
     - name: Linux | ensure libssl-dev is installed (cryptography, paramiko...)
