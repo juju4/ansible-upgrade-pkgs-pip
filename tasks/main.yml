@@ -12,6 +12,7 @@
 
 #- block:
     - include: upgrade-pkgs-pip.yml
+      when: not (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int > 16)
     - include: upgrade-pkgs-pip3.yml
 #  when: not (upgradepkgspip_exclude_hosts is defined and upgradepkgspip_exclude_hosts[inventory_hostname])
 
