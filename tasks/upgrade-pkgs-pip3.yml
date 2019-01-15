@@ -16,8 +16,12 @@
     - name: Linux | ensure libssl-dev is installed (cryptography, paramiko...)
       package: name=libssl-dev state=present
       when: ansible_system == 'Linux'
+      register: pkg_result
+      until: pkg_result is success
     - name: upgrade python pip3 itself
       pip: name=pip state=latest executable=pip3
+      register: pkg_result
+      until: pkg_result is success
       #command: "pip3 install -U pip"
       #command: "python -m pip3 install -U pip3"
     - name: update system python pip3 packages
@@ -28,8 +32,9 @@
         extra_args: "--log {{ upgradepkgspip_pip3_log }}"
       with_items: "{{ pip3list.stdout_lines }}"
       ignore_errors: true
+      register: pkg_result
+      until: pkg_result is success
     - name: set pip3_updated var
       set_fact:
         pip3_updated: true
-  when: pip31 is defined and pip31.stdout is defined and pip31.stdout.find("/usr") != -1 and pip3list.stdout != ''
-
+  when: pip31 is defined and pip31.stdout is defined and pip31.stdout.find("/usr") != -1 and pip3list.stdout

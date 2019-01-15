@@ -5,5 +5,4 @@
 #  vars:
 #    - a:
   roles:
-    - juju4.upgrade-pkgs-pip
-
+    - juju4.upgrade_pkgs_pip

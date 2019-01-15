@@ -1,18 +1,22 @@
 ---
 
 - name: Trusty | python SNI dependencies
-  apt: name={{item}} state=present
+  apt: name={{ item }} state=present
   with_items:
     - python-urllib3
     - python-openssl
     - python-pyasn1
   when: ansible_distribution_release == 'trusty'
+  register: pkg_result
+  until: pkg_result is success
 
 - name: Trusty | python pip SNI dependencies
   pip: name={{item}} state=present
   with_items:
     - ndg-httpsclient
   when: ansible_distribution_release == 'trusty'
+  register: pkg_result
+  until: pkg_result is success
 
 ## Note: python pip doesn't address missing devel packages required for building like libssl-dev, libffi-dev, ...
 - name: check python pip installed
@@ -33,10 +37,14 @@
     - name: Linux | ensure libssl-dev is installed (cryptography, paramiko...)
       package: name=libssl-dev state=present
       when: ansible_system == 'Linux'
+      register: pkg_result
+      until: pkg_result is success
     - name: upgrade python pip itself
       pip: name=pip state=latest
       #command: "pip install -U pip"
       #command: "python -m pip install -U pip"
+      register: pkg_result
+      until: pkg_result is success
     - name: update system python pip packages
       pip:
         name: "{{ item }}"
@@ -44,8 +52,9 @@
         extra_args: "--log {{ upgradepkgspip_pip_log }}"
       with_items: "{{ piplist.stdout_lines }}"
       ignore_errors: true
+      register: pkg_result
+      until: pkg_result is success
     - name: set pip_updated var
       set_fact:
         pip_updated: true
-  when: pip1 is defined and pip1.stdout is defined and pip1.stdout.find("/usr") != -1 and piplist.stdout != ''
-
+  when: pip1 is defined and pip1.stdout is defined and pip1.stdout.find("/usr") != -1 and piplist.stdout
