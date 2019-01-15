@@ -5,7 +5,7 @@
 #  when: ansible_distribution == 'Ubuntu'
 #- name: Include version-specific variables for RedHat
 #  include_vars: "RedHat-{{ ansible_distribution_version.split('.')[0] }}.yml"
-#  when: ansible_os_family == "RedHat" or ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+#  when: ansible_os_family == "RedHat"
 #- name: Include version-specific variables for Alpine
 #  include_vars: "Alpine.yml"
 #  when: ansible_os_family == "Alpine"
@@ -15,4 +15,3 @@
       when: not (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int > 16)
     - include: upgrade-pkgs-pip3.yml
 #  when: not (upgradepkgspip_exclude_hosts is defined and upgradepkgspip_exclude_hosts[inventory_hostname])
-
