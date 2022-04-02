@@ -1,5 +1,3 @@
-[![Build Status - Master](https://travis-ci.org/juju4/ansible-upgrade-pkgs-pip.svg?branch=master)](https://travis-ci.org/juju4/ansible-upgrade-pkgs-pip)
-[![Build Status - Devel](https://travis-ci.org/juju4/ansible-upgrade-pkgs-pip.svg?branch=devel)](https://travis-ci.org/juju4/ansible-upgrade-pkgs-pip/branches)
 # upgrade-pkgs-pip ansible role
 
 Ansible role to upgrade python packages with pip and pip3.
