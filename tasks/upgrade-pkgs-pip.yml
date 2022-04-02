@@ -1,7 +1,7 @@
 ---
 
 - name: Trusty | python SNI dependencies
-  apt:
+  ansible.builtin.apt:
     name:
       - python-urllib3
       - python-openssl
@@ -12,20 +12,20 @@
   until: pkg_result is success
 
 - name: Trusty | python pip SNI dependencies
-  pip: name=ndg-httpsclient state=present
+  ansible.builtin.pip: name=ndg-httpsclient state=present
   when: ansible_distribution_release == 'trusty'
   register: pkg_result
   until: pkg_result is success
 
 ## Note: python pip doesn't address missing devel packages required for building like libssl-dev, libffi-dev, ...
 - name: check python pip installed
-  command: which pip
+  ansible.builtin.command: which pip
   changed_when: false
   ignore_errors: true
   register: pip1
   tags: pip
 - name: get outdated python packages
-  shell: "pip list --outdated 2>/dev/null | awk '!/{{ upgradepkgspip_pip_exclude }}/ { print $1 }'"
+  ansible.builtin.shell: "pip list --outdated 2>/dev/null | awk '!/{{ upgradepkgspip_pip_exclude }}/ { print $1 }'"
   register: piplist
   changed_when: false
   ignore_errors: true
@@ -34,18 +34,18 @@
 #- debug: var=piplist
 - block:
     - name: Linux | ensure libssl-dev is installed (cryptography, paramiko...)
-      package: name=libssl-dev state=present
+      ansible.builtin.package: name=libssl-dev state=present
       when: ansible_system == 'Linux'
       register: pkg_result
       until: pkg_result is success
     - name: upgrade python pip itself
-      pip: name=pip state=latest
+      ansible.builtin.pip: name=pip state=latest
       #command: "pip install -U pip"
       #command: "python -m pip install -U pip"
       register: pkg_result
       until: pkg_result is success
     - name: update system python pip packages
-      pip:
+      ansible.builtin.pip:
         name: "{{ piplist.stdout_lines }}"
         state: latest
         extra_args: "--log {{ upgradepkgspip_pip_log }}"
@@ -53,6 +53,6 @@
       register: pkg_result
       until: pkg_result is success
     - name: set pip_updated var
-      set_fact:
+      ansible.builtin.set_fact:
         pip_updated: true
   when: pip1 is defined and pip1.stdout is defined and pip1.stdout.find("/usr") != -1 and piplist.stdout
