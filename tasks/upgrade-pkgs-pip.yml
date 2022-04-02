@@ -31,7 +31,7 @@
   ignore_errors: true
   tags: pip
 
-#- debug: var=piplist
+# - debug: var=piplist
 - block:
     - name: Linux | ensure libssl-dev is installed (cryptography, paramiko...)
       ansible.builtin.package: name=libssl-dev state=present
@@ -39,16 +39,18 @@
       register: pkg_result
       until: pkg_result is success
     - name: upgrade python pip itself
-      ansible.builtin.pip: name=pip state=latest
-      #command: "pip install -U pip"
-      #command: "python -m pip install -U pip"
+      ansible.builtin.pip:  # noqa package-latest
+        name: pip
+        state: latest
+      # command: "pip install -U pip"
+      # command: "python -m pip install -U pip"
       register: pkg_result
       until: pkg_result is success
     - name: update system python pip packages
-      ansible.builtin.pip:
+      ansible.builtin.pip:  # noqa package-latest
         name: "{{ piplist.stdout_lines }}"
         state: latest
-        extra_args: "--log {{ upgradepkgspip_pip_log }}"
+        extra_args: "--log {{ upgradepkgspip_pip_log }}"
       ignore_errors: true
       register: pkg_result
       until: pkg_result is success

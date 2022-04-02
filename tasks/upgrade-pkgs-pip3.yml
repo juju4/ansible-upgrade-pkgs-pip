@@ -19,17 +19,20 @@
       register: pkg_result
       until: pkg_result is success
     - name: upgrade python pip3 itself
-      ansible.builtin.pip: name=pip state=latest executable=pip3
+      ansible.builtin.pip:  # noqa package-latest
+        name: pip
+        state: latest
+        executable: pip3
       register: pkg_result
       until: pkg_result is success
-      #command: "pip3 install -U pip"
-      #command: "python -m pip3 install -U pip3"
+      # command: "pip3 install -U pip"
+      # command: "python -m pip3 install -U pip3"
     - name: update system python pip3 packages
-      ansible.builtin.pip:
+      ansible.builtin.pip:  # noqa package-latest
         name: "{{ item }}"
         state: latest
         executable: pip3
-        extra_args: "--log {{ upgradepkgspip_pip3_log }}"
+        extra_args: "--log {{ upgradepkgspip_pip3_log }}"
       with_items: "{{ pip3list.stdout_lines }}"
       ignore_errors: true
       register: pkg_result
