@@ -32,7 +32,8 @@
   tags: pip
 
 # - debug: var=piplist
-- block:
+- name: pip
+  block:
     - name: Linux | ensure libssl-dev is installed (cryptography, paramiko...)
       ansible.builtin.package: name=libssl-dev state=present
       when: ansible_system == 'Linux'

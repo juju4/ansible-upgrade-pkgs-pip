@@ -12,7 +12,8 @@
   changed_when: false
   ignore_errors: true
   tags: pip3
-- block:
+- name: pip3
+  block:
     - name: Linux | ensure libssl-dev is installed (cryptography, paramiko...)
       ansible.builtin.package: name=libssl-dev state=present
       when: ansible_system == 'Linux'
