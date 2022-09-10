@@ -1,25 +1,25 @@
 ---
 
-- name: check python pip3 installed
+- name: Check python pip3 installed
   ansible.builtin.command: which pip3
   changed_when: false
   ignore_errors: true
   register: pip31
   tags: pip3
-- name: get outdated python3 packages
+- name: Get outdated python3 packages
   ansible.builtin.shell: "pip3 list --outdated 2>/dev/null | awk '!/{{ upgradepkgspip_pip3_exclude }}/ { print $1 }'"
   register: pip3list
   changed_when: false
   ignore_errors: true
   tags: pip3
-- name: pip3
+- name: Pip3
   block:
     - name: Linux | ensure libssl-dev is installed (cryptography, paramiko...)
       ansible.builtin.package: name=libssl-dev state=present
       when: ansible_system == 'Linux'
       register: pkg_result
       until: pkg_result is success
-    - name: upgrade python pip3 itself
+    - name: Upgrade python pip3 itself
       ansible.builtin.pip:  # noqa package-latest
         name: pip
         state: latest
@@ -28,7 +28,7 @@
       until: pkg_result is success
       # command: "pip3 install -U pip"
       # command: "python -m pip3 install -U pip3"
-    - name: update system python pip3 packages
+    - name: Update system python pip3 packages
       ansible.builtin.pip:  # noqa package-latest
         name: "{{ item }}"
         state: latest
@@ -38,7 +38,7 @@
       ignore_errors: true
       register: pkg_result
       until: pkg_result is success
-    - name: set pip3_updated var
+    - name: Set pip3_updated var
       ansible.builtin.set_fact:
         pip3_updated: true
   when: pip31 is defined and pip31.stdout is defined and pip31.stdout.find("/usr") != -1 and pip3list.stdout
