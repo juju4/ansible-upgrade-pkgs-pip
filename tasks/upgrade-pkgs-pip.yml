@@ -1,22 +1,5 @@
 ---
 
-- name: Trusty | python SNI dependencies
-  ansible.builtin.apt:
-    name:
-      - python-urllib3
-      - python-openssl
-      - python-pyasn1
-    state: present
-  when: ansible_distribution_release == 'trusty'
-  register: pkg_result
-  until: pkg_result is success
-
-- name: Trusty | python pip SNI dependencies
-  ansible.builtin.pip: name=ndg-httpsclient state=present
-  when: ansible_distribution_release == 'trusty'
-  register: pkg_result
-  until: pkg_result is success
-
 ## Note: python pip doesn't address missing devel packages required for building like libssl-dev, libffi-dev, ...
 - name: check python pip installed
   ansible.builtin.command: which pip
