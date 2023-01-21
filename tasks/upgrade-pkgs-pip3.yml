@@ -13,9 +13,12 @@
   ignore_errors: true
   tags: pip3
 - name: Pip3
+  when: pip31 is defined and pip31.stdout is defined and pip31.stdout.find("/usr") != -1 and pip3list.stdout
   block:
     - name: Linux | ensure libssl-dev is installed (cryptography, paramiko...)
-      ansible.builtin.package: name=libssl-dev state=present
+      ansible.builtin.package:
+        name: libssl-dev
+        state: present
       when: ansible_system == 'Linux'
       register: pkg_result
       until: pkg_result is success
@@ -41,4 +44,3 @@
     - name: Set pip3_updated var
       ansible.builtin.set_fact:
         pip3_updated: true
-  when: pip31 is defined and pip31.stdout is defined and pip31.stdout.find("/usr") != -1 and pip3list.stdout

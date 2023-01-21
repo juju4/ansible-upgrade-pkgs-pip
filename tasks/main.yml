@@ -10,6 +10,8 @@
 #   include_vars: "Alpine.yml"
 #   when: ansible_os_family == "Alpine"
 
-- include: upgrade-pkgs-pip.yml
+- name: Include upgrade-pkgs-pip
+  ansible.builtin.include: upgrade-pkgs-pip.yml
   when: not (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int > 16)
-- include: upgrade-pkgs-pip3.yml
+- name: Include upgrade-pkgs-pip3
+  ansible.builtin.include: upgrade-pkgs-pip3.yml
